@@ -1,5 +1,5 @@
-cc_library_shared {
-    name: "libdisplayconfig.qti",
+cc_defaults {
+    name: "libdisplayconfig.qti_defaults",
     vendor_available: true,
     system_ext_specific: true,
     cflags: [
@@ -23,3 +23,10 @@ cc_library_shared {
     export_header_lib_headers: ["display_intf_headers"],
 }
 
+cc_library {
+    name: "libdisplayconfig.qti",
+    defaults: [
+        "libdisplayconfig.qti_defaults",
+        "no_camera_smooth_apis_defaults"
+    ],
+}

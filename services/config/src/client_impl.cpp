@@ -353,6 +353,7 @@ int ClientImpl::SetCameraLaunchStatus(uint32_t on) {
   return error;
 }
 
+#ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 int ClientImpl::SetCameraSmoothInfo(CameraSmoothOp op, uint32_t fps) {
   CameraSmoothInfo input = {op, fps};
   ByteStream input_params;
@@ -367,6 +368,7 @@ int ClientImpl::SetCameraSmoothInfo(CameraSmoothOp op, uint32_t fps) {
 
   return error;
 }
+#endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 
 int ClientImpl::DisplayBWTransactionPending(bool *status) {
   const bool *output;
@@ -864,6 +866,7 @@ int ClientImpl::ControlIdleStatusCallback(bool enable) {
   return error;
 }
 
+#ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 int ClientImpl::ControlCameraSmoothCallback(bool enable) {
   ByteStream input_params;
   input_params.setToExternal(reinterpret_cast<uint8_t*>(&enable), sizeof(bool));
@@ -876,6 +879,7 @@ int ClientImpl::ControlCameraSmoothCallback(bool enable) {
 
   return error;
 }
+#endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 
 int ClientImpl::SendTUIEvent(DisplayType dpy, TUIEventType event_type) {
   struct TUIEventParams input = {dpy, event_type};
@@ -1049,6 +1053,7 @@ void ClientCallback::ParseNotifyQsyncChange(const ByteStream &input_params) {
                                qsync_data->qsync_refresh_rate);
 }
 
+#ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 void ClientCallback::ParseNotifyCameraSmooth(const ByteStream &input_params) {
   if (callback_ == nullptr || input_params.size() == 0) {
     return;
@@ -1058,6 +1063,7 @@ void ClientCallback::ParseNotifyCameraSmooth(const ByteStream &input_params) {
   const CameraSmoothInfo *camera_info = reinterpret_cast<const CameraSmoothInfo*>(data);
   callback_->NotifyCameraSmoothInfo(camera_info->op, camera_info->fps);
 }
+#endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 
 void ClientCallback::ParseNotifyIdleStatus(const ByteStream &input_params) {
   const bool *is_idle;
@@ -1155,9 +1161,11 @@ Return<void> ClientCallback::perform(uint32_t op_code, const ByteStream &input_p
     case kControlIdleStatusCallback:
       ParseNotifyIdleStatus(input_params);
       break;
+    #ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     case kSetCameraSmoothInfo:
       ParseNotifyCameraSmooth(input_params);
       break;
+    #endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     default:
       break;
   }

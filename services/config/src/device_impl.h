@@ -72,7 +72,9 @@ class DeviceImpl : public IDisplayConfig, public android::hardware::hidl_death_r
     virtual void NotifyQsyncChange(bool qsync_enabled, int32_t refresh_rate,
                                    int32_t qsync_refresh_rate);
     virtual void NotifyIdleStatus(bool is_idle);
+    #ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     virtual void NotifyCameraSmoothInfo(CameraSmoothOp op, uint32_t fps);
+    #endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 
     void ParseIsDisplayConnected(const ByteStream &input_params, perform_cb _hidl_cb);
     void ParseSetDisplayStatus(const ByteStream &input_params, perform_cb _hidl_cb);
@@ -90,7 +92,9 @@ class DeviceImpl : public IDisplayConfig, public android::hardware::hidl_death_r
     void ParseSetIdleTimeout(const ByteStream &input_params, perform_cb _hidl_cb);
     void ParseGetHdrCapabilities(const ByteStream &input_params, perform_cb _hidl_cb);
     void ParseSetCameraLaunchStatus(const ByteStream &input_params, perform_cb _hidl_cb);
+    #ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     void ParseSetCameraSmoothInfo(const ByteStream &input_params, perform_cb _hidl_cb);
+    #endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     void ParseControlCameraSmoothCallback(const ByteStream &input_params, perform_cb _hidl_cb);
     void ParseDisplayBwTransactionPending(perform_cb _hidl_cb);
     void ParseSetDisplayAnimating(const ByteStream &input_params, perform_cb _hidl_cb);

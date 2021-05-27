@@ -178,6 +178,7 @@ void DeviceImpl::DeviceClientContext::NotifyIdleStatus(bool is_idle) {
   }
 }
 
+#ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 void DeviceImpl::DeviceClientContext::NotifyCameraSmoothInfo(CameraSmoothOp op, uint32_t fps) {
   struct CameraSmoothInfo data = {op, fps};
   ByteStream output_params;
@@ -189,6 +190,7 @@ void DeviceImpl::DeviceClientContext::NotifyCameraSmoothInfo(CameraSmoothOp op, 
     return;
   }
 }
+#endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 
 void DeviceImpl::DeviceClientContext::ParseIsDisplayConnected(const ByteStream &input_params,
                                                               perform_cb _hidl_cb) {
@@ -408,6 +410,7 @@ void DeviceImpl::DeviceClientContext::ParseSetCameraLaunchStatus(const ByteStrea
   _hidl_cb(error, {}, {});
 }
 
+#ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 void DeviceImpl::DeviceClientContext::ParseSetCameraSmoothInfo(const ByteStream &input_params,
                                                            perform_cb _hidl_cb) {
   const CameraSmoothInfo *camera_info;
@@ -429,6 +432,7 @@ void DeviceImpl::DeviceClientContext::ParseControlCameraSmoothCallback(const Byt
 
   _hidl_cb(error, {}, {});
 }
+#endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
 
 void DeviceImpl::DeviceClientContext::ParseDisplayBwTransactionPending(perform_cb _hidl_cb) {
   bool status = true;
@@ -1017,12 +1021,14 @@ Return<void> DeviceImpl::perform(uint64_t client_handle, uint32_t op_code,
     case kSetCameraLaunchStatus:
       client->ParseSetCameraLaunchStatus(input_params, _hidl_cb);
       break;
+    #ifndef TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     case kSetCameraSmoothInfo:
       client->ParseSetCameraSmoothInfo(input_params, _hidl_cb);
       break;
     case kControlCameraSmoothCallback:
       client->ParseControlCameraSmoothCallback(input_params, _hidl_cb);
       break;
+    #endif // TARGET_HAS_NO_CAMERA_SMOOTH_APIS
     case kDisplayBwTransactionPending:
       client->ParseDisplayBwTransactionPending(_hidl_cb);
       break;
